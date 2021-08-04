@@ -3,9 +3,9 @@ const {
 } = require('./data');
 const data = require('./data');
 
-function getSpeciesByIds(...ids) {
+function getSpeciesByIds(...ids) { // Acessa os ids, depois verifica id por id e retorna 1
   return ids.map((id) => (species.find((elem) => (elem.id === id))));
-
+  // find retorna somente um, entretando o map já está percorrendo o array.
   // retonar um array dentro de array.
   // return ids.map((id) => (species.filter((elem) => (elem.id === id))));
 
@@ -20,7 +20,7 @@ function getSpeciesByIds(...ids) {
 }
 
 function getAnimalsOlderThan(animal, age) {
-  // seu código aqui
+  return species.some((elem) => elem.name === animal && elem.residents.every((e) => e.age > age));
 }
 
 function getEmployeeByName(employeeName) {
