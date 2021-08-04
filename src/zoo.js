@@ -24,12 +24,12 @@ function getAnimalsOlderThan(animal, age) { // some() um for true && every() * t
 }
 
 function getEmployeeByName(employeeName) {
-  if (!employeeName) return {};
+  if (!employeeName) return {}; // se for undefined
   return employees.find((e) => employeeName === e.firstName || employeeName === e.lastName);
-}
+} // busca no exportado, dentro da chave, se um dos dois existe, e obtem o primeiro, find().
 
 function createEmployee(personalInfo, associatedWith) {
-  // seu código aqui
+  return { ...personalInfo, ...associatedWith }; // fução de dois objetos.
 }
 
 function isManager(id) {
