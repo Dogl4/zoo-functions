@@ -29,11 +29,13 @@ function getEmployeeByName(employeeName) {
 } // busca no exportado, dentro da chave, se um dos dois existe, e obtem o primeiro, find().
 
 function createEmployee(personalInfo, associatedWith) {
-  return { ...personalInfo, ...associatedWith }; // fução de dois objetos.
+  return { ...personalInfo, ...associatedWith }; // fusão de dois objetos.
 }
 
 function isManager(id) {
-  // seu código aqui
+  return employees.some((e) => e.id === id)
+  && employees.some((el) => el.managers.some((ele) => ele === id));
+  // Verifica se existe este id vinculado a algum funcionário, e se em algum dos funcionários, na chave managers, este array, contém este id.
 }
 
 function addEmployee(id, firstName, lastName, managers, responsibleFor) {
