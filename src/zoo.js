@@ -1,5 +1,5 @@
 const {
-  species,
+  species, employees,
 } = require('./data');
 const data = require('./data');
 
@@ -19,12 +19,13 @@ function getSpeciesByIds(...ids) { // Acessa os ids, depois verifica id por id e
   // return species.reduce((acc, curr) => (curr.id === ids ? acc.concat(curr) : acc));
 }
 
-function getAnimalsOlderThan(animal, age) {
+function getAnimalsOlderThan(animal, age) { // some() um for true && every() * trues
   return species.some((elem) => elem.name === animal && elem.residents.every((e) => e.age > age));
 }
 
 function getEmployeeByName(employeeName) {
-  // seu código aqui
+  if (!employeeName) return {};
+  return employees.find((e) => employeeName === e.firstName || employeeName === e.lastName);
 }
 
 function createEmployee(personalInfo, associatedWith) {
