@@ -1,5 +1,5 @@
 const {
-  species, employees,
+  species, employees, prices,
 } = require('./data');
 const data = require('./data');
 
@@ -43,13 +43,14 @@ function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []
 }
 
 function countAnimals(speciess) {
-  const hu = {};
-  data.species.forEach((obj) => { hu[obj.name] = obj.residents.length; });
+  const hu = {}; // Cria um objeto, {names: residentes.length, ...} Se for falsty
+  data.species.forEach((obj) => { hu[obj.name] = obj.residents.length; }); // Referencia <https://developer.mozilla.org/en-US/docs/Glossary/Falsy>
   return (!speciess ? hu : data.species.find((ele) => ele.name === speciess).residents.length);
 }
 
-function calculateEntry(entrants) {
-  // seu código aqui
+function calculateEntry(entrants = {}) {
+  // if (!entrants || entrants === {}) return 0;
+  return Object.entries(entrants).reduce((a, e, i) => (prices[e[0]] * e[1]) + a, 0);
 }
 
 function getAnimalMap(options) {
