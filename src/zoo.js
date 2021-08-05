@@ -20,7 +20,7 @@ function getSpeciesByIds(...ids) { // Acessa os ids, depois verifica id por id e
 }
 
 function getAnimalsOlderThan(animal, age) { // some() um for true && every() * trues
-  return species.some((elem) => elem.name === animal && elem.residents.every((e) => e.age > age));
+  return species.some((elem) => elem.name === animal && elem.residents.every((e) => e.age >= age));
 }
 
 function getEmployeeByName(employeeName) {
@@ -38,8 +38,8 @@ function isManager(id) {
   // Verifica se existe este id vinculado a algum funcionário, e se em algum dos funcionários, na chave managers, este array, contém este id.
 }
 
-function addEmployee(id, firstName, lastName, managers, responsibleFor) {
-  // seu código aqui
+function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []) {
+  return data.employees.push({ id, firstName, lastName, managers, responsibleFor });
 }
 
 function countAnimals(speciess) {
