@@ -38,12 +38,14 @@ function isManager(id) {
   // Verifica se existe este id vinculado a algum funcionário, e se em algum dos funcionários, na chave managers, este array, contém este id.
 }
 
-function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []) {
+function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []) { // Default params
   return data.employees.push({ id, firstName, lastName, managers, responsibleFor });
 }
 
 function countAnimals(speciess) {
-  // seu código aqui
+  const hu = {};
+  data.species.forEach((obj) => { hu[obj.name] = obj.residents.length; });
+  return (!speciess ? hu : data.species.find((ele) => ele.name === speciess).residents.length);
 }
 
 function calculateEntry(entrants) {
