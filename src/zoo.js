@@ -49,12 +49,13 @@ function countAnimals(speciess) {
 }
 
 function calculateEntry(entrants = {}) {
-  // if (!entrants || entrants === {}) return 0;
-  return Object.entries(entrants).reduce((a, e, i) => (prices[e[0]] * e[1]) + a, 0);
+  return Object.entries(entrants).reduce((a, e) => (prices[e[0]] * e[1]) + a, 0);
+  // Transforma objeto em array dentro de array, usa o reduce para acessar os dados do objeto principal a partir do array que transformamos.
 }
 
 function getAnimalMap(options) {
-  // seu código aqui
+  const arrAnimal = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []);
+  if (!options) return species.reduce((a, e) => { const temp = a; temp[e.location] = arrAnimal(e.location); return temp; }, {});
 }
 
 function getSchedule(dayName) {
