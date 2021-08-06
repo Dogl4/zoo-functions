@@ -45,7 +45,7 @@ function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []
 function countAnimals(speciess) {
   const hu = {}; // Cria um objeto, {names: residentes.length, ...} Se for falsty
   data.species.forEach((obj) => { hu[obj.name] = obj.residents.length; }); // Referencia <https://developer.mozilla.org/en-US/docs/Glossary/Falsy>
-  return (!speciess ? hu : data.species.find((ele) => ele.name === speciess).residents.length);
+  return (!speciess ? hu : data.species.find((ele) => ele.name === speciess).residents.length); // olhe a diferença de species para specieSS
 }
 
 function calculateEntry(entrants = {}) {
@@ -54,8 +54,11 @@ function calculateEntry(entrants = {}) {
 }
 
 function getAnimalMap(options) {
-  const arrAnimal = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []);
-  if (!options) return species.reduce((a, e) => { const temp = a; temp[e.location] = arrAnimal(e.location); return temp; }, {});
+  const ar = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []); // Rentorna array de animais por local
+  const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {});
+  if (!options) Object.entries(obj).forEach((e) => { obj[e[0]] = ar(e[0]); });
+  // if(options.includeNames)
+  return obj;
 }
 
 function getSchedule(dayName) {
