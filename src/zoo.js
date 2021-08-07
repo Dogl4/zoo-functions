@@ -53,14 +53,22 @@ function calculateEntry(entrants = {}) {
   // Transforma objeto em array dentro de array, usa o reduce para acessar os dados do objeto principal a partir do array que transformamos.
 }
 
+const ar = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []); // Rentorna array de animais por local
+const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {}); // Cria obj, com locais como chave, valor [].
+const anNome = (eAni) => species.find((e) => e.name === eAni).residents.map((g) => (g).name); // ('lions') => [nomes, nomes]
+const arNam = (arrayName) => arrayName.map((e) => { const t = {}; t[e] = anNome(e); return t; }); // (arrayAnimal) => [{animal: [names,names]},{}]array com Objetos, animal: array Names
+const includeName = () => Object.entries(obj).forEach((e) => { obj[e[0]] = arNam(ar(e[0])); }); // Passa no requisito 2/6 // Acessa as chaves de locais e cria: [{lions: [names]}, gira: [names]]
+const sortNa = () => Object.entries(obj).map((e) => obj[e[0]].map((g) => g[Object.keys(g)].sort())); // Passa no requisito 3/6 // Acessa a array de nomes e ordena os;
+const trueOptions = (parametroObjeto) => { // Faz as verificações
+  const { includeNames, sorted } = parametroObjeto;
+  if (includeNames) includeName();
+  if (sorted) sortNa();
+};
+
 function getAnimalMap(options) {
-  const ar = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []); // Rentorna array de animais por local
-  const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {}); // Cria obj
-  const anNome = (eAni) => species.find((e) => e.name === eAni).residents.map((g) => (g).name); // ('lions') => [nomes, nomes]
-  const arNam = (arrayName) => arrayName.map((e) => { const t = {}; t[e] = anNome(e); return t; }); // (arrayAnimal) => [{animal: [names,names]},{}]array com Objetos, animal: array Names
   if (!options) Object.entries(obj).forEach((e) => { obj[e[0]] = ar(e[0]); }); // pega o obj transforma em array, edita os seus valuers
-  else if (options.includeNames) {
-    Object.entries(obj).forEach((e) => { obj[e[0]] = arNam(ar(e[0])); });
+  else {
+    trueOptions(options); // Se options for true
   }
   return obj;
 }
