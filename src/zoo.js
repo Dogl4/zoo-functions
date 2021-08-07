@@ -124,7 +124,11 @@ function getSchedule(dayName) {
 }
 
 function getOldestFromFirstSpecies(id) {
-  // seu código aqui
+  // Pega o primerio animal de resposibleFor
+  const idAnimal = employees.find((e) => e.id === id).responsibleFor[0]; // 'idaeklfsdkfjsdrtujlaf'
+  const arrayResidentes = species.find((e) => e.id === idAnimal).residents; // [{...}, {...}, {...}]
+  const animalMaisVelho = arrayResidentes.reduce((a, e) => (e.age > a.age ? e : a)); // {name: 'Vicky', sex: 'female', age: 12}
+  return Object.values(animalMaisVelho); // Transforma o objeto em array, só com dos valores
 }
 
 function increasePrices(percentage) {
