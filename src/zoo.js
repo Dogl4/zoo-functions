@@ -42,7 +42,7 @@ function calculateEntry(entrants = {}) {
 
 // Funções auxiliares para o requisito 9
 const funAux = {
-  // Rentorna array de animais por local, para cara alocal: ('NE') => ['lions', 'giraffes'];
+  // Retorna array de animais por local, para cada local: ('NE') => ['lions', 'giraffes'];
   arrayAnimalPorLocal: (local) => species
     .reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []),
   // Cria obj, {'NE': [vazio], 'NW': [], ...}
@@ -51,21 +51,22 @@ const funAux = {
   // ('lions') => [nomes, nomes]
   arrayNomesPorAnimal: (eAni) => species.find((e) => e.name === eAni)
     .residents.map((g) => (g).name),
-  // (arrayAnimal) => [{animal: [names,names]},{animal: [names...]...}] [array com Objetos{ animal: [array Names]}]
+  // (arrayAnimal) => [{animal: [nomes,nomes]},{animal: [nomes...]...}] [array com Objetos{ animal: [array Nomes]}]
   arryObjetoAnimalNomes: (arrayName) => arrayName.map((e) => {
     const t = {}; t[e] = funAux.arrayNomesPorAnimal(e); return t;
   }),
-  // Passa no requisito 2/6 // Acessa as chaves de locais e cria: faz a fusão dos dois objetos.
+  // Passa no requisito 2/6 // Acessa as chaves locais e cria outro objeto, faz a fusão dos dois objetos.
   fusaoObjetoNormal: () => Object.entries(funAux.objetoPrincipal).forEach((e) => {
     funAux.objetoPrincipal[e[0]] = funAux.arryObjetoAnimalNomes(funAux.arrayAnimalPorLocal(e[0]));
   }),
 
-  // Função para ordenar nomes.
+  // Função para ordenar array nomes dentro de objetoPrincipal.
+  // Passa no requisito 3/6 e auxilia no 6/6
   ordena: () => Object.entries(funAux.objetoPrincipal).map((e) => funAux.objetoPrincipal[e[0]]
-    .map((g) => g[Object.keys(g)].sort())), // Passa no requisito 3/6 // Acessa a array de nomes e ordena os;
+    .map((g) => g[Object.keys(g)].sort())),
 
   // Funções criadas para o uso do parametro: options.sex
-  // ('male', 'lions') => ['Maxwell', 'Faustino'], Busca personalisada, por sex
+  // ('male', 'lions') => ['Maxwell', 'Faustino'], Busca personalisada de nomes por sexo
   buscaSex: (sexGenero, eAnimal) => species.find((e) => e.name === eAnimal)
     .residents.filter((g) => (g).sex === sexGenero).map((e) => e.name),
   // Monta array, (['lions', 'giraffes'], 'male') => [{...},{...}]
@@ -75,14 +76,14 @@ const funAux = {
   criaObjPorSex: (genero) => Object.entries(funAux.objetoPrincipal).forEach((e) => {
     funAux.objetoPrincipal[e[0]] = funAux.arrObjNomPorSex(funAux.arrayAnimalPorLocal(e[0]), genero);
   }),
-  // If do sex
-  retornoSexTrue: '',
+  // Função de retorno: If do sex, criado para diminuir a complexidade.
+  condicaoSex: (paramSex, paramSorted) => {
+    // Se for true sex, executa criadoObjPorSex
+    funAux.criaObjPorSex(paramSex);
+    // Se for tbm passado o parametro Sorted, executa esta funçao ordena()
+    if (paramSorted) funAux.ordena();
+  },
 };
-
-function condicaoSex(paramSex, paramSorted) {
-  funAux.criaObjPorSex(paramSex);
-  if (paramSorted) funAux.ordena();
-}
 
 // Funções de verificação
 const trueOptions = (parametroObjeto) => {
@@ -90,7 +91,7 @@ const trueOptions = (parametroObjeto) => {
   if (includeNames) {
     funAux.fusaoObjetoNormal();
     if (sorted) funAux.ordena();
-    if (sex) condicaoSex(sex, sorted);
+    if (sex) funAux.condicaoSex(sex, sorted);
   }
 };
 
@@ -107,7 +108,19 @@ function getAnimalMap(options) {
 }
 
 function getSchedule(dayName) {
-  // seu código aqui
+  const cronograma = {
+    Tuesday: 'Open from 8am until 6pm',
+    Wednesday: 'Open from 8am until 6pm',
+    Thursday: 'Open from 10am until 8pm',
+    Friday: 'Open from 10am until 8pm',
+    Saturday: 'Open from 8am until 10pm',
+    Sunday: 'Open from 8am until 8pm',
+    Monday: 'CLOSED',
+  };
+  // Cria um novo objeto para retornar, caso seja passado um dia.
+  const day = () => { const t = {}; t[dayName] = cronograma[dayName]; return t; };
+  // Se dia não existe => cronograma, se dayName for true(passou a chave certa) passa o horario do dia;
+  return (!dayName ? cronograma : day());
 }
 
 function getOldestFromFirstSpecies(id) {
