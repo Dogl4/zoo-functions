@@ -132,7 +132,12 @@ function getOldestFromFirstSpecies(id) {
 }
 
 function increasePrices(percentage) {
-  // seu código aqui
+  // Cria um valor para só multiplicar.
+  const valor = (percentage / 100) + 1;
+  // * 100 joga 2 casas antes da vírgula, o Math.round salva os inteiro arredondando 1 para cima. / 100 adiciona duas casa decimais (anda com a vircula para esquerda 2 casas)
+  return Object.entries(prices).forEach((e) => {
+    prices[e[0]] = Math.round((e[1] * valor) * 100) / 100;
+  });
 }
 
 function getEmployeeCoverage(idOrName) {
