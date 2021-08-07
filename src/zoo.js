@@ -55,9 +55,13 @@ function calculateEntry(entrants = {}) {
 
 function getAnimalMap(options) {
   const ar = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []); // Rentorna array de animais por local
-  const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {});
-  if (!options) Object.entries(obj).forEach((e) => { obj[e[0]] = ar(e[0]); });
-  // if(options.includeNames)
+  const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {}); // Cria obj
+  const anNome = (eAni) => species.find((e) => e.name === eAni).residents.map((g) => (g).name); // ('lions') => [nomes, nomes]
+  const arNam = (arrayName) => arrayName.map((e) => { const t = {}; t[e] = anNome(e); return t; }); // (arrayAnimal) => [{animal: [names,names]},{}]array com Objetos, animal: array Names
+  if (!options) Object.entries(obj).forEach((e) => { obj[e[0]] = ar(e[0]); }); // pega o obj transforma em array, edita os seus valuers
+  else if (options.includeNames) {
+    Object.entries(obj).forEach((e) => { obj[e[0]] = arNam(ar(e[0])); });
+  }
   return obj;
 }
 
