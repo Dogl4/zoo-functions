@@ -40,44 +40,70 @@ function calculateEntry(entrants = {}) {
   // Transforma objeto em array dentro de array, usa o reduce para acessar os dados do objeto principal a partir do array que transformamos.
 }
 
-// Funções para criar objeto principal. com chaves dos locais, usado os locais fornecidos pelo objeto principal: species.
-const ar = (local) => species.reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []); // Rentorna array de animais por local, para cara alocal: ('NE') => ['lions', 'giraffes'];
-const obj = species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {}); // Cria obj, {'NE': [vazio], 'NW': [], ...}
+// Funções auxiliares para o requisito 9
+const funAux = {
+  // Rentorna array de animais por local, para cara alocal: ('NE') => ['lions', 'giraffes'];
+  arrayAnimalPorLocal: (local) => species
+    .reduce((a, e) => (e.location === local ? a.concat(e.name) : a), []),
+  // Cria obj, {'NE': [vazio], 'NW': [], ...}
+  objetoPrincipal: species.reduce((a, e) => { const t = a; t[e.location] = []; return t; }, {}),
 
-const anNome = (eAni) => species.find((e) => e.name === eAni).residents.map((g) => (g).name); // ('lions') => [nomes, nomes]
-const arNam = (arrayName) => arrayName.map((e) => { const t = {}; t[e] = anNome(e); return t; }); // (arrayAnimal) => [{animal: [names,names]},{animal: [names...]...}] [array com Objetos{ animal: [array Names]}]
-const includeNam = () => Object.entries(obj).forEach((e) => { obj[e[0]] = arNam(ar(e[0])); }); // Passa no requisito 2/6 // Acessa as chaves de locais e cria: faz a fusão dos dois objetos.
+  // ('lions') => [nomes, nomes]
+  arrayNomesPorAnimal: (eAni) => species.find((e) => e.name === eAni)
+    .residents.map((g) => (g).name),
+  // (arrayAnimal) => [{animal: [names,names]},{animal: [names...]...}] [array com Objetos{ animal: [array Names]}]
+  arryObjetoAnimalNomes: (arrayName) => arrayName.map((e) => {
+    const t = {}; t[e] = funAux.arrayNomesPorAnimal(e); return t;
+  }),
+  // Passa no requisito 2/6 // Acessa as chaves de locais e cria: faz a fusão dos dois objetos.
+  fusaoObjetoNormal: () => Object.entries(funAux.objetoPrincipal).forEach((e) => {
+    funAux.objetoPrincipal[e[0]] = funAux.arryObjetoAnimalNomes(funAux.arrayAnimalPorLocal(e[0]));
+  }),
 
-// Função para ordenar nomes.
-const sortNa = () => Object.entries(obj).map((e) => obj[e[0]].map((g) => g[Object.keys(g)].sort())); // Passa no requisito 3/6 // Acessa a array de nomes e ordena os;
+  // Função para ordenar nomes.
+  ordena: () => Object.entries(funAux.objetoPrincipal).map((e) => funAux.objetoPrincipal[e[0]]
+    .map((g) => g[Object.keys(g)].sort())), // Passa no requisito 3/6 // Acessa a array de nomes e ordena os;
 
-// Funções criadas para o uso do parametro: options.sex
-const buscaSex = (sexGenero, eAnimal) => species.find((e) => e.name === eAnimal)
-  .residents.filter((g) => (g).sex === sexGenero).map((e) => e.name); // ('male', 'lions') => ['Maxwell', 'Faustino'], Busca personalisada, por sex
-const arrayObjetosNomesPorSex = (arrayAnimais, generoSex) => arrayAnimais
-  .map((e) => { const t = {}; t[e] = buscaSex(generoSex, e); return t; }); // Monta array, (['lions', 'giraffes'], 'male') => [{...},{...}]
-const criaObjPorSex = (genero) => Object.entries(obj) // Faz a fusão dos dois arrays
-  .forEach((e) => { obj[e[0]] = arrayObjetosNomesPorSex(ar(e[0]), genero); });
+  // Funções criadas para o uso do parametro: options.sex
+  // ('male', 'lions') => ['Maxwell', 'Faustino'], Busca personalisada, por sex
+  buscaSex: (sexGenero, eAnimal) => species.find((e) => e.name === eAnimal)
+    .residents.filter((g) => (g).sex === sexGenero).map((e) => e.name),
+  // Monta array, (['lions', 'giraffes'], 'male') => [{...},{...}]
+  arrObjNomPorSex: (arrayAnimais, generoSex) => arrayAnimais
+    .map((e) => { const t = {}; t[e] = funAux.buscaSex(generoSex, e); return t; }),
+  // Faz a fusão dos dois arrays
+  criaObjPorSex: (genero) => Object.entries(funAux.objetoPrincipal).forEach((e) => {
+    funAux.objetoPrincipal[e[0]] = funAux.arrObjNomPorSex(funAux.arrayAnimalPorLocal(e[0]), genero);
+  }),
+  // If do sex
+  retornoSexTrue: '',
+};
+
+function condicaoSex(paramSex, paramSorted) {
+  funAux.criaObjPorSex(paramSex);
+  if (paramSorted) funAux.ordena();
+}
 
 // Funções de verificação
 const trueOptions = (parametroObjeto) => {
   const { includeNames, sorted, sex } = parametroObjeto;
   if (includeNames) {
-    includeNam();
-    if (sorted) sortNa();
-    if (sex) {
-      criaObjPorSex(sex);
-      if (sorted) sortNa();
-    }
+    funAux.fusaoObjetoNormal();
+    if (sorted) funAux.ordena();
+    if (sex) condicaoSex(sex, sorted);
   }
 };
 
 function getAnimalMap(options) {
-  if (!options) Object.entries(obj).forEach((e) => { obj[e[0]] = ar(e[0]); }); // pega o obj e faz adiciona valores, {NE: ['lions', 'giraffes'], ...}
-  else {
+  if (!options || !options.includeNames) {
+    Object.entries(funAux.objetoPrincipal).forEach((e) => {
+      funAux.objetoPrincipal[e[0]] = funAux
+        .arrayAnimalPorLocal(e[0]);
+    }); // pega o obj e faz adiciona valores, {NE: ['lions', 'giraffes'], ...}
+  } else {
     trueOptions(options); // Se options for true
   }
-  return obj;
+  return funAux.objetoPrincipal;
 }
 
 function getSchedule(dayName) {
