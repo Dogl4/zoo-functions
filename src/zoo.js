@@ -59,12 +59,16 @@ const arrayObjetosNomesPorSex = (arrayAnimais, generoSex) => arrayAnimais
 const criaObjPorSex = (genero) => Object.entries(obj) // Faz a fusão dos dois arrays
   .forEach((e) => { obj[e[0]] = arrayObjetosNomesPorSex(ar(e[0]), genero); });
 
-const trueOptions = (parametroObjeto) => { // Faz as verificações
+// Funções de verificação
+const trueOptions = (parametroObjeto) => {
   const { includeNames, sorted, sex } = parametroObjeto;
   if (includeNames) {
     includeNam();
     if (sorted) sortNa();
-    if (sex) criaObjPorSex(sex);
+    if (sex) {
+      criaObjPorSex(sex);
+      if (sorted) sortNa();
+    }
   }
 };
 
