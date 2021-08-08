@@ -141,7 +141,19 @@ function increasePrices(percentage) {
 }
 
 function getEmployeeCoverage(idOrName) {
-  // seu código aqui
+  // Cria array de animais, a partir de array de animais.
+  const arrayIds = (arrayAnimais) => arrayAnimais.reduce((acc, id) => acc
+    .concat(species.find((e) => e.id === id).name), []); // ([idsAnimal, idsAnimal]) arrayAnimal
+  // Cria objeto
+  const objetoFunAni = employees.reduce((a, e) => {
+    const t = a; t[`${e.firstName} ${e.lastName}`] = arrayIds(e.responsibleFor); return a;
+  }, {}); // {Nigel Nelson: ['tigers', 'bears'], Burl Bethea: [...]...}
+  // Retorna elementro certo
+  const elemento = employees.reduce((a, e) => (Object.entries(e)
+    .some((d) => d[1] === idOrName) ? e : a));
+  const newObj = {};
+  newObj[`${elemento.firstName} ${elemento.lastName}`] = arrayIds(elemento.responsibleFor);
+  return (!idOrName ? objetoFunAni : newObj);
 }
 
 module.exports = {
