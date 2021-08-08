@@ -108,15 +108,15 @@ function getAnimalMap(options) {
 }
 
 function getSchedule(dayName) {
-  const cronograma = {
-    Tuesday: 'Open from 8am until 6pm',
-    Wednesday: 'Open from 8am until 6pm',
-    Thursday: 'Open from 10am until 8pm',
-    Friday: 'Open from 10am until 8pm',
-    Saturday: 'Open from 8am until 10pm',
-    Sunday: 'Open from 8am until 8pm',
-    Monday: 'CLOSED',
-  };
+  // Faz a verificação se está aberto.
+  const verificaAberto = (number1, number2) =>
+    (number1 > 0 ? `Open from ${number1}am until ${(number2 - 12)}pm` : 'CLOSED');
+  // Cria um objeto dinamicamente
+  const cronograma = Object.entries(data.hours).reduce((a, e) => {
+    const t = a;
+    t[e[0]] = verificaAberto(Object.values(e[1])[0], Object.values(e[1])[1]);
+    return a;
+  }, {});
   // Cria um novo objeto para retornar, caso seja passado um dia.
   const day = () => { const t = {}; t[dayName] = cronograma[dayName]; return t; };
   // Se dia não existe => cronograma, se dayName for true(passou a chave certa) passa o horario do dia;
